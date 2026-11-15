@@ -1,0 +1,8 @@
+{
+  "allowedPrefixes": [
+    "etc/",
+    "assets/",
+    "cache/",
+    "links/"
+  ]
+}

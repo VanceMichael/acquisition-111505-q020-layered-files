@@ -1,0 +1,9 @@
+{
+  "name": "层式软件交付的最终文件视图与来源领取",
+  "probe": "/image/manifest",
+  "identityFields": [
+    "image",
+    "path",
+    "layer"
+  ]
+}

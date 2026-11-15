@@ -1,0 +1,6 @@
+{
+  "image": "gallery-a",
+  "path": "etc/gallery.conf",
+  "layer": "manual",
+  "text": "language=zh"
+}
