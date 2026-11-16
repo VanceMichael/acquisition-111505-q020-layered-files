@@ -44,6 +44,12 @@ export class Archive {
     this.tail = result.catch(() => {});
     return result;
   }
+  async store(bytes) {
+    const source = Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes);
+    const sha256 = digest(source);
+    await this.atomic(join(this.directory, 'blobs', sha256), source);
+    return sha256;
+  }
   async list() {
     await this.tail;
     const names = (await readdir(join(this.directory, 'receipts'))).filter(name => name.endsWith('.json')).sort();
