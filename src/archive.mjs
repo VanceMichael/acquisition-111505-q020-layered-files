@@ -22,10 +22,18 @@ export class Archive {
     try { await rename(temporary, path); }
     catch (error) { await unlink(temporary).catch(() => {}); throw error; }
   }
-  async accept(source, identity, data, raw) {
+  async put(bytes) {
+    const buffer = Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes);
+    const sha256 = digest(buffer);
+    await this.atomic(join(this.directory, 'blobs', sha256), buffer);
+    return sha256;
+  }
+  async accept(source, identity, data, raw, related = []) {
     const operation = async () => {
       const bytes = Buffer.isBuffer(raw) ? raw : Buffer.from(raw);
       const sha256 = digest(bytes);
+      // 先写内容，最后写版本清单：任何中途失败都不会留下指向缺失内容的记录。
+      for (const item of related) await this.put(item);
       await this.atomic(join(this.directory, 'blobs', sha256), bytes);
       const key = digest(Buffer.from(JSON.stringify([source, identity])));
       const path = join(this.directory, 'receipts', `${key}.json`);
